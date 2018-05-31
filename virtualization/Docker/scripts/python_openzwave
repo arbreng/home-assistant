@@ -1,0 +1,25 @@
+#!/bin/sh
+# Sets up and builds python open zwave to be used with Home Assistant.
+# Dependencies that need to be installed:
+# apt-get install cython3 libudev-dev python3-sphinx python3-setuptools
+
+# Stop on errors
+set -e
+
+cd "$(dirname "$0")/.."
+
+if [ -d build ]; then
+  rm -rf build
+fi
+
+mkdir -p build
+
+cd build
+
+git clone -b masterhttps://github.com/arbreng/open-zwave.git openzwave
+
+cd openzwave
+make install
+cd ..
+
+rm -rf openzwave/.git
