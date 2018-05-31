@@ -769,7 +769,7 @@ pydaikin==0.4
 pydeconz==38
 
 # homeassistant.components.zwave
-pydispatcher==2.0.5
+#pydispatcher==2.0.5
 
 # homeassistant.components.android_ip_webcam
 pydroid-ipcam==0.8
@@ -1078,7 +1078,7 @@ python-wink==1.7.3
 python_opendata_transport==0.1.0
 
 # homeassistant.components.zwave
-python_openzwave==0.4.3
+#python_openzwave==0.4.3 --install-option="--flavor=shared"
 
 # homeassistant.components.egardia
 pythonegardia==1.0.39
