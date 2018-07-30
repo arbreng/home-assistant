@@ -16,7 +16,7 @@ from homeassistant.const import (
 )
 
 
-REQUIREMENTS = ['mitemp_bt==0.0.1']
+REQUIREMENTS = ['btlewrap==0.0.2', 'mitemp_bt==0.0.1']
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -58,15 +58,16 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
 
 def setup_platform(hass, config, add_devices, discovery_info=None):
     """Set up the MiTempBt sensor."""
+    import btlewrap
     from mitemp_bt import mitemp_bt_poller
-    try:
-        import bluepy.btle  # noqa: F401 pylint: disable=unused-variable
-        from btlewrap import BluepyBackend
-        backend = BluepyBackend
-    except ImportError:
-        from btlewrap import GatttoolBackend
-        backend = GatttoolBackend
-    _LOGGER.debug('MiTempBt is using %s backend.', backend.__name__)
+
+    backends = btlewrap.available_backends()
+    if not backends:
+        _LOGGER.error('No available Bluetooth backends.')
+        return
+
+    backend = backends[0]  # Any available backend works.
+    _LOGGER.debug('Using the %s Bluetooth backend.', backend.__name__)
 
     cache = config.get(CONF_CACHE)
     poller = mitemp_bt_poller.MiTempBtPoller(

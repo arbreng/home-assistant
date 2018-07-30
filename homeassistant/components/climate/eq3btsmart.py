@@ -16,7 +16,7 @@ from homeassistant.const import (
     ATTR_TEMPERATURE, CONF_DEVICES, CONF_MAC, PRECISION_HALVES, STATE_AUTO,
     STATE_OFF, STATE_ON, TEMP_CELSIUS)
 
-REQUIREMENTS = ['python-eq3bt==0.1.9', 'construct==2.9.41']
+REQUIREMENTS = ['bluepy==1.1.4', 'construct==2.9.41', 'python-eq3bt==0.1.9']
 
 _LOGGER = logging.getLogger(__name__)
 
