@@ -11,10 +11,7 @@ from homeassistant.components.climate import (
     DOMAIN, SUPPORT_FAN_MODE, SUPPORT_OPERATION_MODE, SUPPORT_SWING_MODE,
     SUPPORT_TARGET_TEMPERATURE, ClimateDevice)
 from homeassistant.components.zwave import (  # pylint: disable=unused-import;  # noqa:F401
-    async_setup_platform)
-
-from homeassistant.components.zwave import ZWaveDeviceEntity
-from homeassistant.components.zwave import async_setup_platform  # pylint: disable=unused-import; # noqa
+    async_setup_platform, ZWaveDeviceEntity)
 from homeassistant.const import (
     ATTR_TEMPERATURE, STATE_AUTO, STATE_COOL, STATE_HEAT, STATE_OFF,
     TEMP_CELSIUS, TEMP_FAHRENHEIT)

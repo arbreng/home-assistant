@@ -65,7 +65,7 @@ def setup(hass, config):
     return True
 
 
-class SousVideEntity(ToggleEntity):
+class SousVideDevice(ToggleEntity):
     """Representation of a sous-vide device."""
 
     @property

@@ -1,11 +1,12 @@
-"""Support for Anova sous-vide machines.
+"""
+Support for Anova sous-vide machines.
 
 For more details about this platform, please refer to the documentation
 https://home-assistant.io/components/sousvide.anova/
 """
 import logging
 
-from homeassistant.components.sous_vide import SousVideEntity
+from homeassistant.components.sous_vide import SousVideDevice
 from homeassistant.const import (
     CONF_MAC, CONF_NAME, PRECISION_TENTHS, STATE_OFF, STATE_ON, STATE_PROBLEM,
     STATE_UNKNOWN, TEMP_CELSIUS, TEMP_FAHRENHEIT)
@@ -33,13 +34,12 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
 
     name = config[CONF_NAME]
     mac = config[CONF_MAC]
-    entity = AnovaEntity(name, mac, backend)
-    add_devices([entity])
+    add_devices([AnovaDevice(name, mac, backend)])
 
 
-class AnovaEntity(SousVideEntity):
-    """Representation of an Anova Sous-Vide cooker."""
-    # pylint: disable=too-many-instance-attributes
+class AnovaDevice(SousVideDevice):  # pylint: disable=too-many-instance-attributes; # noqa: E501
+    """Representation of an Anova sous-vide cooker."""
+
     _temp = 0
     _target_temp = 0
     _unit = TEMP_CELSIUS
@@ -139,12 +139,12 @@ class AnovaEntity(SousVideEntity):
         _LOGGER.debug("Sending command %s", command)
         command = "{0}\r".format(command)
         try:
-            with self._bt_interface.connect(self._mac) as conn:
-                conn.write_handle(  # pylint: disable=no-member
+            with self._bt_interface.connect(self._mac) as connection:
+                connection.write_handle(  # pylint: disable=no-member; # noqa: E501
                     CHANDLE_ANOVA, bytes(command, 'UTF-8'))
                 if read_response:
                     _LOGGER.debug("Waiting for response")
-                    if conn.wait_for_notification(  # pylint: disable=no-member
+                    if connection.wait_for_notification(  # pylint: disable=no-member; # noqa: E501
                             CHANDLE_ANOVA, self, NOTIFICATION_TIMEOUT):
                         _LOGGER.debug("Got response: %s",
                                       self._last_notification)
@@ -154,8 +154,8 @@ class AnovaEntity(SousVideEntity):
             return None
         return None
 
-    def handleNotification(self, handle, raw_data):
-        """ Callback to handle BTLE notifications."""
+    def handleNotification(self, handle, raw_data):  # pylint: disable=invalid-name; # noqa: E501
+        """Callback to handle BTLE notifications."""
         if raw_data is None:
             return
 
