@@ -8,12 +8,12 @@ https://home-assistant.io/components/climate.homematicip_cloud/
 import logging
 
 from homeassistant.components.climate import (
-    ClimateDevice, SUPPORT_TARGET_TEMPERATURE, ATTR_TEMPERATURE,
-    STATE_AUTO, STATE_MANUAL)
-from homeassistant.const import TEMP_CELSIUS
+    SUPPORT_TARGET_TEMPERATURE, ClimateDevice)
+from homeassistant.components.homematicip_cloud import DOMAIN as HMIPC_DOMAIN
 from homeassistant.components.homematicip_cloud import (
-    HomematicipGenericDevice, DOMAIN as HMIPC_DOMAIN,
-    HMIPC_HAPID)
+    HMIPC_HAPID, HomematicipGenericDevice)
+from homeassistant.const import (
+    ATTR_TEMPERATURE, STATE_AUTO, STATE_MANUAL, TEMP_CELSIUS)
 
 _LOGGER = logging.getLogger(__name__)
 

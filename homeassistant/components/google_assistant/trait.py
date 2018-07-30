@@ -3,9 +3,11 @@ from homeassistant.components import (
     climate, cover, fan, group, input_boolean, light, media_player, scene,
     script, sous_vide, switch)
 from homeassistant.const import (
-    ATTR_ENTITY_ID, ATTR_MEASUREMENT_PRECISION, ATTR_TEMPERATURE,
-    ATTR_UNIT_OF_MEASUREMENT, SERVICE_SET_TEMPERATURE, SERVICE_TURN_OFF,
-    SERVICE_TURN_ON, STATE_OFF, TEMP_CELSIUS, TEMP_FAHRENHEIT)
+    ATTR_CURRENT_TEMPERATURE, ATTR_ENTITY_ID, ATTR_MAX_TEMP,
+    ATTR_MEASUREMENT_PRECISION, ATTR_MIN_TEMP, ATTR_OPERATION_MODE,
+    ATTR_TEMPERATURE, ATTR_UNIT_OF_MEASUREMENT, SERVICE_SET_TEMPERATURE,
+    SERVICE_TURN_OFF, SERVICE_TURN_ON, STATE_AUTO, STATE_COOL, STATE_HEAT,
+    STATE_OFF, TEMP_CELSIUS, TEMP_FAHRENHEIT)
 from homeassistant.core import DOMAIN as HA_DOMAIN
 from homeassistant.util import color as color_util
 from homeassistant.util import temperature as temp_util
@@ -394,8 +396,8 @@ class TemperatureControlTrait(_Trait):
 
     def sync_attributes(self):
         """Return temperature control attributes for a sync request."""
-        min_temp = self.state.attributes.get(climate.ATTR_MIN_TEMP, 10.0)
-        max_temp = self.state.attributes.get(climate.ATTR_MAX_TEMP, 10.0)
+        min_temp = self.state.attributes.get(ATTR_MIN_TEMP, 10.0)
+        max_temp = self.state.attributes.get(ATTR_MAX_TEMP, 10.0)
         unit = self.state.attributes[ATTR_UNIT_OF_MEASUREMENT]
         precision = self.state.attributes.get(ATTR_MEASUREMENT_PRECISION, 1.0)
 
@@ -414,8 +416,7 @@ class TemperatureControlTrait(_Trait):
         """Return current temperature and setpoint query attributes."""
         response = {}
         unit = self.state.attributes[ATTR_UNIT_OF_MEASUREMENT]
-        current_temp = self.state.attributes.get(
-            climate.ATTR_CURRENT_TEMPERATURE)
+        current_temp = self.state.attributes.get(ATTR_CURRENT_TEMPERATURE)
         if current_temp is not None:
             response['temperatureAmbientCelsius'] = \
                 round(temp_util.convert(current_temp, unit, TEMP_CELSIUS), 2)
@@ -430,8 +431,8 @@ class TemperatureControlTrait(_Trait):
         """Execute a temperature point or mode command."""
         # All sent in temperatures are always in Celsius
         unit = self.state.attributes[ATTR_UNIT_OF_MEASUREMENT]
-        min_temp = self.state.attributes[climate.ATTR_MIN_TEMP]
-        max_temp = self.state.attributes[climate.ATTR_MAX_TEMP]
+        min_temp = self.state.attributes[ATTR_MIN_TEMP]
+        max_temp = self.state.attributes[ATTR_MAX_TEMP]
 
         if command == COMMAND_SET_TEMPERATURE:
             temp = round(temp_util.convert(
@@ -446,7 +447,7 @@ class TemperatureControlTrait(_Trait):
             await hass.services.async_call(
                 sous_vide.DOMAIN, SERVICE_SET_TEMPERATURE, {
                     ATTR_ENTITY_ID: self.state.entity_id,
-                    climate.ATTR_TEMPERATURE: temp
+                    ATTR_TEMPERATURE: temp
                 }, blocking=True)
 
 
@@ -466,10 +467,10 @@ class TemperatureSettingTrait(_Trait):
     # We do not support "on" as we are unable to know how to restore
     # the last mode.
     hass_to_google = {
-        climate.STATE_HEAT: 'heat',
-        climate.STATE_COOL: 'cool',
-        climate.STATE_OFF: 'off',
-        climate.STATE_AUTO: 'heatcool',
+        STATE_HEAT: 'heat',
+        STATE_COOL: 'cool',
+        STATE_OFF: 'off',
+        STATE_AUTO: 'heatcool',
     }
     google_to_hass = {value: key for key, value in hass_to_google.items()}
 
@@ -499,13 +500,13 @@ class TemperatureSettingTrait(_Trait):
         attrs = self.state.attributes
         response = {}
 
-        operation = attrs.get(climate.ATTR_OPERATION_MODE)
+        operation = attrs.get(ATTR_OPERATION_MODE)
         if operation is not None and operation in self.hass_to_google:
             response['thermostatMode'] = self.hass_to_google[operation]
 
         unit = self.state.attributes[ATTR_UNIT_OF_MEASUREMENT]
 
-        current_temp = attrs.get(climate.ATTR_CURRENT_TEMPERATURE)
+        current_temp = attrs.get(ATTR_CURRENT_TEMPERATURE)
         if current_temp is not None:
             response['thermostatTemperatureAmbient'] = \
                 round(temp_util.convert(current_temp, unit, TEMP_CELSIUS), 1)
@@ -514,7 +515,7 @@ class TemperatureSettingTrait(_Trait):
         if current_humidity is not None:
             response['thermostatHumidityAmbient'] = current_humidity
 
-        if (operation == climate.STATE_AUTO and
+        if (operation == STATE_AUTO and
                 climate.ATTR_TARGET_TEMP_HIGH in attrs and
                 climate.ATTR_TARGET_TEMP_LOW in attrs):
             response['thermostatTemperatureSetpointHigh'] = \
@@ -524,7 +525,7 @@ class TemperatureSettingTrait(_Trait):
                 round(temp_util.convert(attrs[climate.ATTR_TARGET_TEMP_LOW],
                                         unit, TEMP_CELSIUS), 1)
         else:
-            target_temp = attrs.get(climate.ATTR_TEMPERATURE)
+            target_temp = attrs.get(ATTR_TEMPERATURE)
             if target_temp is not None:
                 response['thermostatTemperatureSetpoint'] = round(
                     temp_util.convert(target_temp, unit, TEMP_CELSIUS), 1)
@@ -535,8 +536,8 @@ class TemperatureSettingTrait(_Trait):
         """Execute a temperature point or mode command."""
         # All sent in temperatures are always in Celsius
         unit = self.state.attributes[ATTR_UNIT_OF_MEASUREMENT]
-        min_temp = self.state.attributes[climate.ATTR_MIN_TEMP]
-        max_temp = self.state.attributes[climate.ATTR_MAX_TEMP]
+        min_temp = self.state.attributes[ATTR_MIN_TEMP]
+        max_temp = self.state.attributes[ATTR_MAX_TEMP]
 
         if command == COMMAND_THERMOSTAT_TEMPERATURE_SETPOINT:
             temp = temp_util.convert(params['thermostatTemperatureSetpoint'],
@@ -549,9 +550,9 @@ class TemperatureSettingTrait(_Trait):
                                                                      max_temp))
 
             await hass.services.async_call(
-                climate.DOMAIN, climate.SERVICE_SET_TEMPERATURE, {
+                climate.DOMAIN, SERVICE_SET_TEMPERATURE, {
                     ATTR_ENTITY_ID: self.state.entity_id,
-                    climate.ATTR_TEMPERATURE: temp
+                    ATTR_TEMPERATURE: temp
                 }, blocking=True)
 
         elif command == COMMAND_THERMOSTAT_TEMPERATURE_SET_RANGE:
@@ -575,7 +576,7 @@ class TemperatureSettingTrait(_Trait):
                     "{} and {}".format(min_temp, max_temp))
 
             await hass.services.async_call(
-                climate.DOMAIN, climate.SERVICE_SET_TEMPERATURE, {
+                climate.DOMAIN, SERVICE_SET_TEMPERATURE, {
                     ATTR_ENTITY_ID: self.state.entity_id,
                     climate.ATTR_TARGET_TEMP_HIGH: temp_high,
                     climate.ATTR_TARGET_TEMP_LOW: temp_low,
@@ -585,6 +586,6 @@ class TemperatureSettingTrait(_Trait):
             await hass.services.async_call(
                 climate.DOMAIN, climate.SERVICE_SET_OPERATION_MODE, {
                     ATTR_ENTITY_ID: self.state.entity_id,
-                    climate.ATTR_OPERATION_MODE:
+                    ATTR_OPERATION_MODE:
                         self.google_to_hass[params['thermostatMode']],
                 }, blocking=True)

@@ -10,13 +10,13 @@ import logging
 
 import voluptuous as vol
 
-from homeassistant.components.climate import (
-    STATE_AUTO, STATE_COOL, STATE_HEAT, STATE_IDLE, STATE_ON, STATE_OFF,
-    ClimateDevice, PLATFORM_SCHEMA, SUPPORT_TARGET_TEMPERATURE,
-    SUPPORT_OPERATION_MODE, SUPPORT_FAN_MODE, SUPPORT_AWAY_MODE)
-from homeassistant.const import (
-    CONF_HOST, TEMP_FAHRENHEIT, ATTR_TEMPERATURE, PRECISION_HALVES)
 import homeassistant.helpers.config_validation as cv
+from homeassistant.components.climate import (
+    PLATFORM_SCHEMA, SUPPORT_AWAY_MODE, SUPPORT_FAN_MODE,
+    SUPPORT_OPERATION_MODE, SUPPORT_TARGET_TEMPERATURE, ClimateDevice)
+from homeassistant.const import (
+    ATTR_TEMPERATURE, CONF_HOST, PRECISION_HALVES, STATE_AUTO, STATE_COOL,
+    STATE_HEAT, STATE_IDLE, STATE_OFF, STATE_ON, TEMP_FAHRENHEIT)
 
 REQUIREMENTS = ['radiotherm==1.3']
 

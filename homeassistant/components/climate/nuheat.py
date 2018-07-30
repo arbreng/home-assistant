@@ -9,22 +9,14 @@ from datetime import timedelta
 
 import voluptuous as vol
 
+import homeassistant.helpers.config_validation as cv
 from homeassistant.components.climate import (
-    ClimateDevice,
-    DOMAIN,
-    SUPPORT_HOLD_MODE,
-    SUPPORT_OPERATION_MODE,
-    SUPPORT_TARGET_TEMPERATURE,
-    STATE_AUTO,
-    STATE_HEAT,
-    STATE_IDLE)
+    DOMAIN, SUPPORT_HOLD_MODE, SUPPORT_OPERATION_MODE,
+    SUPPORT_TARGET_TEMPERATURE, ClimateDevice)
 from homeassistant.components.nuheat import DOMAIN as NUHEAT_DOMAIN
 from homeassistant.const import (
-    ATTR_ENTITY_ID,
-    ATTR_TEMPERATURE,
-    TEMP_CELSIUS,
-    TEMP_FAHRENHEIT)
-import homeassistant.helpers.config_validation as cv
+    ATTR_ENTITY_ID, ATTR_TEMPERATURE, STATE_AUTO, STATE_HEAT, STATE_IDLE,
+    TEMP_CELSIUS, TEMP_FAHRENHEIT)
 from homeassistant.util import Throttle
 
 DEPENDENCIES = ["nuheat"]

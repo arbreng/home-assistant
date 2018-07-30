@@ -1,12 +1,11 @@
 """Test Z-Wave climate devices."""
 import pytest
-
-from homeassistant.components.climate import zwave, STATE_COOL, STATE_HEAT
+from homeassistant.components.climate import zwave
 from homeassistant.const import (
-    STATE_OFF, TEMP_CELSIUS, TEMP_FAHRENHEIT, ATTR_TEMPERATURE)
-
+    ATTR_TEMPERATURE, STATE_COOL, STATE_HEAT, STATE_OFF, TEMP_CELSIUS,
+    TEMP_FAHRENHEIT)
 from tests.mock.zwave import (
-    MockNode, MockValue, MockEntityValues, value_changed)
+    MockEntityValues, MockNode, MockValue, value_changed)
 
 
 @pytest.fixture

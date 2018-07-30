@@ -8,15 +8,16 @@ import logging
 
 import voluptuous as vol
 
-from homeassistant.components.climate import (
-    ATTR_OPERATION_MODE, PLATFORM_SCHEMA, STATE_COOL, STATE_DRY,
-    STATE_FAN_ONLY, STATE_HEAT, SUPPORT_FAN_MODE, SUPPORT_ON_OFF,
-    SUPPORT_OPERATION_MODE, SUPPORT_TARGET_TEMPERATURE, ClimateDevice)
-from homeassistant.const import (ATTR_TEMPERATURE, CONF_HOST, CONF_PORT,
-                                 EVENT_HOMEASSISTANT_STOP, TEMP_CELSIUS)
 import homeassistant.helpers.config_validation as cv
-from homeassistant.helpers.dispatcher import (async_dispatcher_connect,
-                                              async_dispatcher_send)
+from homeassistant.components.climate import (
+    PLATFORM_SCHEMA, STATE_DRY, STATE_FAN_ONLY, SUPPORT_FAN_MODE,
+    SUPPORT_ON_OFF, SUPPORT_OPERATION_MODE, SUPPORT_TARGET_TEMPERATURE,
+    ClimateDevice)
+from homeassistant.const import (
+    ATTR_OPERATION_MODE, ATTR_TEMPERATURE, CONF_HOST, CONF_PORT,
+    EVENT_HOMEASSISTANT_STOP, STATE_COOL, STATE_HEAT, TEMP_CELSIUS)
+from homeassistant.helpers.dispatcher import (
+    async_dispatcher_connect, async_dispatcher_send)
 
 _LOGGER = logging.getLogger(__name__)
 

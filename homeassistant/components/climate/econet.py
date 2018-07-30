@@ -9,14 +9,14 @@ import logging
 
 import voluptuous as vol
 
+import homeassistant.helpers.config_validation as cv
 from homeassistant.components.climate import (
     DOMAIN, PLATFORM_SCHEMA, STATE_ECO, STATE_ELECTRIC, STATE_GAS,
-    STATE_HEAT_PUMP, STATE_HIGH_DEMAND, STATE_OFF, STATE_PERFORMANCE,
+    STATE_HEAT_PUMP, STATE_HIGH_DEMAND, STATE_PERFORMANCE,
     SUPPORT_OPERATION_MODE, SUPPORT_TARGET_TEMPERATURE, ClimateDevice)
 from homeassistant.const import (
-    ATTR_ENTITY_ID, ATTR_TEMPERATURE, CONF_PASSWORD, CONF_USERNAME,
+    ATTR_ENTITY_ID, ATTR_TEMPERATURE, CONF_PASSWORD, CONF_USERNAME, STATE_OFF,
     TEMP_FAHRENHEIT)
-import homeassistant.helpers.config_validation as cv
 
 REQUIREMENTS = ['pyeconet==0.0.5']
 

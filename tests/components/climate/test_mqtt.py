@@ -1,19 +1,19 @@
 """The tests for the mqtt climate component."""
-import unittest
 import copy
+import unittest
 
-from homeassistant.util.unit_system import (
-    METRIC_SYSTEM
-)
-from homeassistant.setup import setup_component
 from homeassistant.components import climate
-from homeassistant.const import STATE_OFF, STATE_UNAVAILABLE
 from homeassistant.components.climate import (
-    SUPPORT_OPERATION_MODE, SUPPORT_TARGET_TEMPERATURE,
-    SUPPORT_FAN_MODE, SUPPORT_SWING_MODE, SUPPORT_HOLD_MODE,
-    SUPPORT_AWAY_MODE, SUPPORT_AUX_HEAT, DEFAULT_MIN_TEMP, DEFAULT_MAX_TEMP)
-from tests.common import (get_test_home_assistant, mock_mqtt_component,
-                          fire_mqtt_message, mock_component)
+    DEFAULT_MAX_TEMP, DEFAULT_MIN_TEMP, SUPPORT_AUX_HEAT, SUPPORT_AWAY_MODE,
+    SUPPORT_FAN_MODE, SUPPORT_HOLD_MODE, SUPPORT_OPERATION_MODE,
+    SUPPORT_SWING_MODE, SUPPORT_TARGET_TEMPERATURE)
+from homeassistant.const import (
+    STATE_AUTO, STATE_COOL, STATE_HEAT, STATE_OFF, STATE_UNAVAILABLE)
+from homeassistant.setup import setup_component
+from homeassistant.util.unit_system import METRIC_SYSTEM
+from tests.common import (
+    fire_mqtt_message, get_test_home_assistant, mock_component,
+    mock_mqtt_component)
 
 ENTITY_CLIMATE = 'climate.test'
 
@@ -74,8 +74,8 @@ class TestMQTTClimate(unittest.TestCase):
         state = self.hass.states.get(ENTITY_CLIMATE)
         modes = state.attributes.get('operation_list')
         self.assertEqual([
-            climate.STATE_AUTO, STATE_OFF, climate.STATE_COOL,
-            climate.STATE_HEAT, climate.STATE_DRY, climate.STATE_FAN_ONLY
+            STATE_AUTO, STATE_OFF, STATE_COOL,
+            STATE_HEAT, climate.STATE_DRY, climate.STATE_FAN_ONLY
         ], modes)
 
     def test_set_operation_bad_attr_and_state(self):

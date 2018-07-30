@@ -6,12 +6,13 @@ https://home-assistant.io/components/climate.homekit_controller/
 """
 import logging
 
-from homeassistant.components.homekit_controller import (
-    HomeKitEntity, KNOWN_ACCESSORIES)
 from homeassistant.components.climate import (
-    ClimateDevice, STATE_HEAT, STATE_COOL, STATE_IDLE,
-    SUPPORT_TARGET_TEMPERATURE, SUPPORT_OPERATION_MODE)
-from homeassistant.const import TEMP_CELSIUS, STATE_OFF, ATTR_TEMPERATURE
+    SUPPORT_OPERATION_MODE, SUPPORT_TARGET_TEMPERATURE, ClimateDevice)
+from homeassistant.components.homekit_controller import (
+    KNOWN_ACCESSORIES, HomeKitEntity)
+from homeassistant.const import (
+    ATTR_TEMPERATURE, STATE_COOL, STATE_HEAT, STATE_IDLE, STATE_OFF,
+    TEMP_CELSIUS)
 
 DEPENDENCIES = ['homekit_controller']
 

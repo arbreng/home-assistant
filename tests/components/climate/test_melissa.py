@@ -1,20 +1,17 @@
 """Test for Melissa climate component."""
+import json
 import unittest
 from unittest.mock import Mock, patch
-import json
 
 from asynctest import mock
-
 from homeassistant.components.climate import (
-    melissa, SUPPORT_TARGET_TEMPERATURE, SUPPORT_OPERATION_MODE,
-    SUPPORT_ON_OFF, SUPPORT_FAN_MODE, STATE_HEAT, STATE_FAN_ONLY, STATE_DRY,
-    STATE_COOL, STATE_AUTO
-)
-from homeassistant.components.fan import SPEED_LOW, SPEED_MEDIUM, SPEED_HIGH
+    STATE_DRY, STATE_FAN_ONLY, SUPPORT_FAN_MODE, SUPPORT_ON_OFF,
+    SUPPORT_OPERATION_MODE, SUPPORT_TARGET_TEMPERATURE, melissa)
+from homeassistant.components.fan import SPEED_HIGH, SPEED_LOW, SPEED_MEDIUM
 from homeassistant.components.melissa import DATA_MELISSA
 from homeassistant.const import (
-    TEMP_CELSIUS, STATE_ON, ATTR_TEMPERATURE, STATE_OFF, STATE_IDLE
-)
+    ATTR_TEMPERATURE, STATE_AUTO, STATE_COOL, STATE_HEAT, STATE_IDLE,
+    STATE_OFF, STATE_ON, TEMP_CELSIUS)
 from tests.common import get_test_home_assistant, load_fixture
 
 

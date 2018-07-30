@@ -6,14 +6,16 @@ https://home-assistant.io/components/climate.netatmo/
 """
 import logging
 from datetime import timedelta
+
 import voluptuous as vol
 
-from homeassistant.const import TEMP_CELSIUS, ATTR_TEMPERATURE
-from homeassistant.components.climate import (
-    STATE_HEAT, STATE_IDLE, ClimateDevice, PLATFORM_SCHEMA,
-    SUPPORT_TARGET_TEMPERATURE, SUPPORT_OPERATION_MODE, SUPPORT_AWAY_MODE)
-from homeassistant.util import Throttle
 import homeassistant.helpers.config_validation as cv
+from homeassistant.components.climate import (
+    PLATFORM_SCHEMA, SUPPORT_AWAY_MODE, SUPPORT_OPERATION_MODE,
+    SUPPORT_TARGET_TEMPERATURE, ClimateDevice)
+from homeassistant.const import (
+    ATTR_TEMPERATURE, STATE_HEAT, STATE_IDLE, TEMP_CELSIUS)
+from homeassistant.util import Throttle
 
 DEPENDENCIES = ['netatmo']
 

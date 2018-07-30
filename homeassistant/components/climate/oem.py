@@ -12,13 +12,14 @@ import logging
 import requests
 import voluptuous as vol
 
+import homeassistant.helpers.config_validation as cv
 # Import the device class from the component that you want to support
 from homeassistant.components.climate import (
-    ClimateDevice, PLATFORM_SCHEMA, STATE_HEAT, STATE_IDLE, ATTR_TEMPERATURE,
-    SUPPORT_TARGET_TEMPERATURE, SUPPORT_AWAY_MODE)
-from homeassistant.const import (CONF_HOST, CONF_USERNAME, CONF_PASSWORD,
-                                 CONF_PORT, TEMP_CELSIUS, CONF_NAME)
-import homeassistant.helpers.config_validation as cv
+    PLATFORM_SCHEMA, SUPPORT_AWAY_MODE, SUPPORT_TARGET_TEMPERATURE,
+    ClimateDevice)
+from homeassistant.const import (
+    ATTR_TEMPERATURE, CONF_HOST, CONF_NAME, CONF_PASSWORD, CONF_PORT,
+    CONF_USERNAME, STATE_HEAT, STATE_IDLE, TEMP_CELSIUS)
 
 REQUIREMENTS = ['oemthermostat==1.1']
 

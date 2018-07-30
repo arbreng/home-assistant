@@ -8,12 +8,13 @@ import logging
 
 import voluptuous as vol
 
-from homeassistant.components.climate import (
-    STATE_ON, STATE_OFF, STATE_AUTO, PLATFORM_SCHEMA, ClimateDevice,
-    SUPPORT_TARGET_TEMPERATURE, SUPPORT_OPERATION_MODE, SUPPORT_AWAY_MODE)
-from homeassistant.const import (
-    CONF_MAC, CONF_DEVICES, TEMP_CELSIUS, ATTR_TEMPERATURE, PRECISION_HALVES)
 import homeassistant.helpers.config_validation as cv
+from homeassistant.components.climate import (
+    PLATFORM_SCHEMA, SUPPORT_AWAY_MODE, SUPPORT_OPERATION_MODE,
+    SUPPORT_TARGET_TEMPERATURE, ClimateDevice)
+from homeassistant.const import (
+    ATTR_TEMPERATURE, CONF_DEVICES, CONF_MAC, PRECISION_HALVES, STATE_AUTO,
+    STATE_OFF, STATE_ON, TEMP_CELSIUS)
 
 REQUIREMENTS = ['python-eq3bt==0.1.9', 'construct==2.9.41']
 

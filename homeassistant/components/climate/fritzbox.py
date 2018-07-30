@@ -7,16 +7,16 @@ http://home-assistant.io/components/climate.fritzbox/
 import logging
 
 import requests
-
+from homeassistant.components.climate import (
+    STATE_ECO, SUPPORT_OPERATION_MODE, SUPPORT_TARGET_TEMPERATURE,
+    ClimateDevice)
 from homeassistant.components.fritzbox import DOMAIN as FRITZBOX_DOMAIN
 from homeassistant.components.fritzbox import (
-    ATTR_STATE_DEVICE_LOCKED, ATTR_STATE_BATTERY_LOW, ATTR_STATE_LOCKED)
-from homeassistant.components.climate import (
-    ATTR_OPERATION_MODE, ClimateDevice, STATE_ECO, STATE_HEAT, STATE_MANUAL,
-    STATE_OFF, STATE_ON, SUPPORT_OPERATION_MODE,
-    SUPPORT_TARGET_TEMPERATURE)
+    ATTR_STATE_BATTERY_LOW, ATTR_STATE_DEVICE_LOCKED, ATTR_STATE_LOCKED)
 from homeassistant.const import (
-    ATTR_TEMPERATURE, PRECISION_HALVES, TEMP_CELSIUS)
+    ATTR_OPERATION_MODE, ATTR_TEMPERATURE, PRECISION_HALVES, STATE_HEAT,
+    STATE_MANUAL, STATE_OFF, STATE_ON, TEMP_CELSIUS)
+
 DEPENDENCIES = ['fritzbox']
 
 _LOGGER = logging.getLogger(__name__)

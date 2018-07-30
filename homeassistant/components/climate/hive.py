@@ -5,10 +5,12 @@ For more details about this platform, please refer to the documentation at
 https://home-assistant.io/components/climate.hive/
 """
 from homeassistant.components.climate import (
-    ClimateDevice, STATE_AUTO, STATE_HEAT, STATE_OFF, STATE_ON,
-    SUPPORT_AUX_HEAT, SUPPORT_TARGET_TEMPERATURE, SUPPORT_OPERATION_MODE)
-from homeassistant.const import ATTR_TEMPERATURE, TEMP_CELSIUS
+    SUPPORT_AUX_HEAT, SUPPORT_OPERATION_MODE, SUPPORT_TARGET_TEMPERATURE,
+    ClimateDevice)
 from homeassistant.components.hive import DATA_HIVE
+from homeassistant.const import (
+    ATTR_TEMPERATURE, STATE_AUTO, STATE_HEAT, STATE_OFF, STATE_ON,
+    TEMP_CELSIUS)
 
 DEPENDENCIES = ['hive']
 HIVE_TO_HASS_STATE = {'SCHEDULE': STATE_AUTO, 'MANUAL': STATE_HEAT,

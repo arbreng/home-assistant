@@ -6,14 +6,16 @@ https://home-assistant.io/components/climate.ephember/
 """
 import logging
 from datetime import timedelta
+
 import voluptuous as vol
 
-from homeassistant.components.climate import (
-    ClimateDevice, PLATFORM_SCHEMA, STATE_HEAT, STATE_IDLE, SUPPORT_AUX_HEAT,
-    SUPPORT_TARGET_TEMPERATURE)
-from homeassistant.const import (
-    TEMP_CELSIUS, CONF_USERNAME, CONF_PASSWORD, ATTR_TEMPERATURE)
 import homeassistant.helpers.config_validation as cv
+from homeassistant.components.climate import (
+    PLATFORM_SCHEMA, SUPPORT_AUX_HEAT, SUPPORT_TARGET_TEMPERATURE,
+    ClimateDevice)
+from homeassistant.const import (
+    ATTR_TEMPERATURE, CONF_PASSWORD, CONF_USERNAME, STATE_HEAT, STATE_IDLE,
+    TEMP_CELSIUS)
 
 REQUIREMENTS = ['pyephember==0.1.1']
 

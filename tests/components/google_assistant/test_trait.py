@@ -1,24 +1,17 @@
 """Tests for the Google Assistant traits."""
 import pytest
-
-from homeassistant.const import (
-    STATE_ON, STATE_OFF, ATTR_ENTITY_ID, SERVICE_TURN_ON, SERVICE_TURN_OFF,
-    ATTR_UNIT_OF_MEASUREMENT, TEMP_CELSIUS, TEMP_FAHRENHEIT)
-from homeassistant.core import State, DOMAIN as HA_DOMAIN
 from homeassistant.components import (
-    climate,
-    cover,
-    fan,
-    input_boolean,
-    light,
-    media_player,
-    scene,
-    script,
-    switch,
-)
-from homeassistant.components.google_assistant import trait, helpers, const
+    climate, cover, fan, input_boolean, light, media_player, scene, script,
+    switch)
+from homeassistant.components.google_assistant import const, helpers, trait
+from homeassistant.const import (
+    ATTR_CURRENT_TEMPERATURE, ATTR_ENTITY_ID, ATTR_OPERATION_MODE,
+    ATTR_TEMPERATURE, ATTR_UNIT_OF_MEASUREMENT, SERVICE_SET_TEMPERATURE,
+    SERVICE_TURN_OFF, SERVICE_TURN_ON, STATE_AUTO, STATE_COOL, STATE_HEAT,
+    STATE_OFF, STATE_ON, TEMP_CELSIUS, TEMP_FAHRENHEIT)
+from homeassistant.core import DOMAIN as HA_DOMAIN
+from homeassistant.core import State
 from homeassistant.util import color
-
 from tests.common import async_mock_service
 
 
@@ -502,15 +495,15 @@ async def test_temperature_setting_climate_range(hass):
         climate.DOMAIN, climate.SUPPORT_OPERATION_MODE)
 
     trt = trait.TemperatureSettingTrait(State(
-        'climate.bla', climate.STATE_AUTO, {
+        'climate.bla', STATE_AUTO, {
             climate.ATTR_CURRENT_TEMPERATURE: 70,
             climate.ATTR_CURRENT_HUMIDITY: 25,
-            climate.ATTR_OPERATION_MODE: climate.STATE_AUTO,
+            climate.ATTR_OPERATION_MODE: STATE_AUTO,
             climate.ATTR_OPERATION_LIST: [
-                climate.STATE_OFF,
-                climate.STATE_COOL,
-                climate.STATE_HEAT,
-                climate.STATE_AUTO,
+                STATE_OFF,
+                STATE_COOL,
+                STATE_HEAT,
+                STATE_AUTO,
             ],
             climate.ATTR_TARGET_TEMP_HIGH: 75,
             climate.ATTR_TARGET_TEMP_LOW: 65,
@@ -534,7 +527,7 @@ async def test_temperature_setting_climate_range(hass):
     assert trt.can_execute(trait.COMMAND_THERMOSTAT_SET_MODE, {})
 
     calls = async_mock_service(
-        hass, climate.DOMAIN, climate.SERVICE_SET_TEMPERATURE)
+        hass, climate.DOMAIN, SERVICE_SET_TEMPERATURE)
     await trt.execute(hass, trait.COMMAND_THERMOSTAT_TEMPERATURE_SET_RANGE, {
         'thermostatTemperatureSetpointHigh': 25,
         'thermostatTemperatureSetpointLow': 20,
@@ -554,7 +547,7 @@ async def test_temperature_setting_climate_range(hass):
     assert len(calls) == 1
     assert calls[0].data == {
         ATTR_ENTITY_ID: 'climate.bla',
-        climate.ATTR_OPERATION_MODE: climate.STATE_AUTO,
+        ATTR_OPERATION_MODE: STATE_AUTO,
     }
 
     with pytest.raises(helpers.SmartHomeError) as err:
@@ -572,16 +565,16 @@ async def test_temperature_setting_climate_setpoint(hass):
         climate.DOMAIN, climate.SUPPORT_OPERATION_MODE)
 
     trt = trait.TemperatureSettingTrait(State(
-        'climate.bla', climate.STATE_AUTO, {
-            climate.ATTR_OPERATION_MODE: climate.STATE_COOL,
+        'climate.bla', STATE_AUTO, {
+            climate.ATTR_OPERATION_MODE: STATE_COOL,
             climate.ATTR_OPERATION_LIST: [
-                climate.STATE_OFF,
-                climate.STATE_COOL,
+                STATE_OFF,
+                STATE_COOL,
             ],
             climate.ATTR_MIN_TEMP: 10,
             climate.ATTR_MAX_TEMP: 30,
-            climate.ATTR_TEMPERATURE: 18,
-            climate.ATTR_CURRENT_TEMPERATURE: 20,
+            ATTR_TEMPERATURE: 18,
+            ATTR_CURRENT_TEMPERATURE: 20,
             ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
         }))
     assert trt.sync_attributes() == {
@@ -598,7 +591,7 @@ async def test_temperature_setting_climate_setpoint(hass):
     assert trt.can_execute(trait.COMMAND_THERMOSTAT_SET_MODE, {})
 
     calls = async_mock_service(
-        hass, climate.DOMAIN, climate.SERVICE_SET_TEMPERATURE)
+        hass, climate.DOMAIN, SERVICE_SET_TEMPERATURE)
 
     with pytest.raises(helpers.SmartHomeError):
         await trt.execute(
@@ -612,5 +605,5 @@ async def test_temperature_setting_climate_setpoint(hass):
     assert len(calls) == 1
     assert calls[0].data == {
         ATTR_ENTITY_ID: 'climate.bla',
-        climate.ATTR_TEMPERATURE: 19
+        ATTR_TEMPERATURE: 19
     }

@@ -1,16 +1,13 @@
 """The test for the NuHeat thermostat module."""
 import unittest
 from unittest.mock import Mock, patch
-from tests.common import get_test_home_assistant
 
-from homeassistant.components.climate import (
-    SUPPORT_HOLD_MODE,
-    SUPPORT_OPERATION_MODE,
-    SUPPORT_TARGET_TEMPERATURE,
-    STATE_HEAT,
-    STATE_IDLE)
 import homeassistant.components.climate.nuheat as nuheat
-from homeassistant.const import TEMP_CELSIUS, TEMP_FAHRENHEIT
+from homeassistant.components.climate import (
+    SUPPORT_HOLD_MODE, SUPPORT_OPERATION_MODE, SUPPORT_TARGET_TEMPERATURE)
+from homeassistant.const import (
+    STATE_HEAT, STATE_IDLE, TEMP_CELSIUS, TEMP_FAHRENHEIT)
+from tests.common import get_test_home_assistant
 
 SCHEDULE_HOLD = 3
 SCHEDULE_RUN = 1

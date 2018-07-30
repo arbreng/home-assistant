@@ -3,29 +3,22 @@ import asyncio
 import datetime
 import unittest
 from unittest import mock
-import pytz
 
-import homeassistant.core as ha
-from homeassistant.core import callback, CoreState, State
-from homeassistant.setup import setup_component, async_setup_component
-from homeassistant.const import (
-    ATTR_UNIT_OF_MEASUREMENT,
-    SERVICE_TURN_OFF,
-    SERVICE_TURN_ON,
-    STATE_ON,
-    STATE_OFF,
-    STATE_IDLE,
-    TEMP_CELSIUS,
-    ATTR_TEMPERATURE
-)
-from homeassistant import loader
-from homeassistant.util.unit_system import METRIC_SYSTEM
-from homeassistant.util.async_ import run_coroutine_threadsafe
-from homeassistant.components import climate, input_boolean, switch
 import homeassistant.components as comps
-from tests.common import (assert_setup_component, get_test_home_assistant,
-                          mock_restore_cache)
-
+import homeassistant.core as ha
+import pytz
+from homeassistant import loader
+from homeassistant.components import climate, input_boolean, switch
+from homeassistant.const import (
+    ATTR_OPERATION_MODE, ATTR_TEMPERATURE, ATTR_UNIT_OF_MEASUREMENT,
+    SERVICE_TURN_OFF, SERVICE_TURN_ON, STATE_COOL, STATE_HEAT, STATE_IDLE,
+    STATE_OFF, STATE_ON, TEMP_CELSIUS)
+from homeassistant.core import CoreState, State, callback
+from homeassistant.setup import async_setup_component, setup_component
+from homeassistant.util.async_ import run_coroutine_threadsafe
+from homeassistant.util.unit_system import METRIC_SYSTEM
+from tests.common import (
+    assert_setup_component, get_test_home_assistant, mock_restore_cache)
 
 ENTITY = 'climate.test'
 ENT_SENSOR = 'sensor.test'
@@ -68,7 +61,7 @@ class TestSetupClimateGenericThermostat(unittest.TestCase):
                                 'name': 'test',
                                 'heater': ENT_SWITCH,
                                 'target_sensor': ENT_SENSOR
-                                }})
+                            }})
         )
 
 
@@ -184,7 +177,7 @@ class TestClimateGenericThermostat(unittest.TestCase):
         """Test that the operation list returns the correct modes."""
         state = self.hass.states.get(ENTITY)
         modes = state.attributes.get('operation_list')
-        self.assertEqual([climate.STATE_HEAT, STATE_OFF], modes)
+        self.assertEqual([STATE_HEAT, STATE_OFF], modes)
 
     def test_set_target_temp(self):
         """Test the setting of the target temperature."""
@@ -359,7 +352,7 @@ class TestClimateGenericThermostat(unittest.TestCase):
         self._setup_sensor(25)
         self.hass.block_till_done()
         self._setup_switch(False)
-        climate.set_operation_mode(self.hass, climate.STATE_HEAT)
+        climate.set_operation_mode(self.hass, STATE_HEAT)
         self.hass.block_till_done()
         self.assertEqual(1, len(self.calls))
         call = self.calls[0]
@@ -443,7 +436,7 @@ class TestClimateGenericThermostatACMode(unittest.TestCase):
         self._setup_sensor(30)
         self.hass.block_till_done()
         self._setup_switch(False)
-        climate.set_operation_mode(self.hass, climate.STATE_COOL)
+        climate.set_operation_mode(self.hass, STATE_COOL)
         self.hass.block_till_done()
         self.assertEqual(1, len(self.calls))
         call = self.calls[0]
@@ -949,7 +942,8 @@ def test_restore_state(hass):
     """Ensure states are restored on startup."""
     mock_restore_cache(hass, (
         State('climate.test_thermostat', '0', {ATTR_TEMPERATURE: "20",
-              climate.ATTR_OPERATION_MODE: "off", ATTR_AWAY_MODE: "on"}),
+                                               ATTR_OPERATION_MODE: "off",
+                                               ATTR_AWAY_MODE: "on"}),
     ))
 
     hass.state = CoreState.starting
@@ -964,7 +958,7 @@ def test_restore_state(hass):
 
     state = hass.states.get('climate.test_thermostat')
     assert(state.attributes[ATTR_TEMPERATURE] == 20)
-    assert(state.attributes[climate.ATTR_OPERATION_MODE] == "off")
+    assert(state.attributes[ATTR_OPERATION_MODE] == "off")
     assert(state.state == STATE_OFF)
 
 
@@ -976,7 +970,8 @@ def test_no_restore_state(hass):
     """
     mock_restore_cache(hass, (
         State('climate.test_thermostat', '0', {ATTR_TEMPERATURE: "20",
-              climate.ATTR_OPERATION_MODE: "off", ATTR_AWAY_MODE: "on"}),
+                                               ATTR_OPERATION_MODE: "off",
+                                               ATTR_AWAY_MODE: "on"}),
     ))
 
     hass.state = CoreState.starting
@@ -1024,7 +1019,7 @@ class TestClimateGenericThermostatRestoreState(unittest.TestCase):
         state = self.hass.states.get(ENTITY)
         self.assertEqual(20, state.attributes[ATTR_TEMPERATURE])
         self.assertEqual(STATE_OFF,
-                         state.attributes[climate.ATTR_OPERATION_MODE])
+                         state.attributes[ATTR_OPERATION_MODE])
         self.assertEqual(STATE_OFF, state.state)
         self.assertEqual(0, len(self.calls))
 
@@ -1032,7 +1027,7 @@ class TestClimateGenericThermostatRestoreState(unittest.TestCase):
         self.hass.block_till_done()
         state = self.hass.states.get(ENTITY)
         self.assertEqual(STATE_OFF,
-                         state.attributes[climate.ATTR_OPERATION_MODE])
+                         state.attributes[ATTR_OPERATION_MODE])
         self.assertEqual(STATE_OFF, state.state)
 
     def _setup_climate(self):
@@ -1070,6 +1065,6 @@ class TestClimateGenericThermostatRestoreState(unittest.TestCase):
         mock_restore_cache(self.hass, (
             State(ENTITY, '0', {
                 ATTR_TEMPERATURE: str(temperature),
-                climate.ATTR_OPERATION_MODE: operation_mode,
+                ATTR_OPERATION_MODE: operation_mode,
                 ATTR_AWAY_MODE: "on"}),
         ))

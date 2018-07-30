@@ -7,11 +7,12 @@ Eneco.
 For more details about this platform, please refer to the documentation at
 https://home-assistant.io/components/climate.toon/
 """
-from homeassistant.components.climate import (
-    ATTR_TEMPERATURE, STATE_COOL, STATE_ECO, STATE_HEAT, STATE_PERFORMANCE,
-    SUPPORT_OPERATION_MODE, SUPPORT_TARGET_TEMPERATURE, ClimateDevice)
 import homeassistant.components.toon as toon_main
-from homeassistant.const import TEMP_CELSIUS
+from homeassistant.components.climate import (
+    STATE_ECO, STATE_PERFORMANCE, SUPPORT_OPERATION_MODE,
+    SUPPORT_TARGET_TEMPERATURE, ClimateDevice)
+from homeassistant.const import (
+    ATTR_TEMPERATURE, STATE_COOL, STATE_HEAT, TEMP_CELSIUS)
 
 SUPPORT_FLAGS = SUPPORT_TARGET_TEMPERATURE | SUPPORT_OPERATION_MODE
 

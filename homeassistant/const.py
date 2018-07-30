@@ -186,6 +186,10 @@ STATE_PLAYING = 'playing'
 STATE_PAUSED = 'paused'
 STATE_IDLE = 'idle'
 STATE_STANDBY = 'standby'
+STATE_AUTO = 'auto'
+STATE_MANUAL = 'manual'
+STATE_COOL = 'cool'
+STATE_HEAT = 'heat'
 STATE_ALARM_DISARMED = 'disarmed'
 STATE_ALARM_ARMED_HOME = 'armed_home'
 STATE_ALARM_ARMED_AWAY = 'armed_away'
@@ -297,8 +301,15 @@ ATTR_SUPPORTED_FEATURES = 'supported_features'
 # Class of device within its domain
 ATTR_DEVICE_CLASS = 'device_class'
 
+# Operation mode of the device
+ATTR_OPERATION_MODE = 'operation_mode'
+
 # Temperature attribute
 ATTR_TEMPERATURE = 'temperature'
+ATTR_CURRENT_TEMPERATURE = 'current_temperature'
+ATTR_MAX_TEMP = 'max_temp'
+ATTR_MIN_TEMP = 'min_temp'
+ATTR_MEASUREMENT_PRECISION = 'measurement_precision'
 
 # #### UNITS OF MEASUREMENT ####
 # Temperature units
@@ -378,6 +389,8 @@ SERVICE_STOP_COVER = 'stop_cover'
 SERVICE_STOP_COVER_TILT = 'stop_cover_tilt'
 
 SERVICE_SELECT_OPTION = 'select_option'
+
+SERVICE_SET_TEMPERATURE = 'set_temperature'
 
 # #### API / REMOTE ####
 SERVER_PORT = 8123

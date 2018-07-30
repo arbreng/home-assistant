@@ -10,17 +10,22 @@ from homeassistant.components import (
     media_player, scene, script, switch, http, sensor, sous_vide)
 import homeassistant.core as ha
 import homeassistant.util.color as color_util
-from homeassistant.util.temperature import convert as convert_temperature
-from homeassistant.util.decorator import Registry
+from homeassistant.components import (
+    alert, automation, climate, cover, fan, group, http, input_boolean, light,
+    lock, media_player, scene, script, sensor, sous_vide, switch)
 from homeassistant.const import (
-    ATTR_ENTITY_ID, ATTR_SUPPORTED_FEATURES, ATTR_TEMPERATURE, CONF_NAME,
-    SERVICE_LOCK, SERVICE_MEDIA_NEXT_TRACK, SERVICE_MEDIA_PAUSE,
-    SERVICE_MEDIA_PLAY, SERVICE_MEDIA_PREVIOUS_TRACK, SERVICE_MEDIA_STOP,
-    SERVICE_SET_COVER_POSITION, SERVICE_TURN_OFF, SERVICE_TURN_ON,
-    SERVICE_UNLOCK, SERVICE_VOLUME_SET, TEMP_FAHRENHEIT, TEMP_CELSIUS,
-    CONF_UNIT_OF_MEASUREMENT, STATE_LOCKED, STATE_UNLOCKED, STATE_ON)
+    ATTR_CURRENT_TEMPERATURE, ATTR_ENTITY_ID, ATTR_OPERATION_MODE,
+    ATTR_SUPPORTED_FEATURES, ATTR_TEMPERATURE, CONF_NAME,
+    CONF_UNIT_OF_MEASUREMENT, SERVICE_LOCK, SERVICE_MEDIA_NEXT_TRACK,
+    SERVICE_MEDIA_PAUSE, SERVICE_MEDIA_PLAY, SERVICE_MEDIA_PREVIOUS_TRACK,
+    SERVICE_MEDIA_STOP, SERVICE_SET_COVER_POSITION, SERVICE_SET_TEMPERATURE,
+    SERVICE_TURN_OFF, SERVICE_TURN_ON, SERVICE_UNLOCK, SERVICE_VOLUME_SET,
+    STATE_AUTO, STATE_COOL, STATE_HEAT, STATE_IDLE, STATE_LOCKED, STATE_ON,
+    STATE_UNLOCKED, TEMP_CELSIUS, TEMP_FAHRENHEIT)
+from homeassistant.util.decorator import Registry
+from homeassistant.util.temperature import convert as convert_temperature
 
-from .const import CONF_FILTER, CONF_ENTITY_CONFIG
+from .const import CONF_ENTITY_CONFIG, CONF_FILTER
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -37,11 +42,11 @@ API_TEMP_UNITS = {
 }
 
 API_THERMOSTAT_MODES = {
-    climate.STATE_HEAT: 'HEAT',
-    climate.STATE_COOL: 'COOL',
-    climate.STATE_AUTO: 'AUTO',
+    STATE_HEAT: 'HEAT',
+    STATE_COOL: 'COOL',
+    STATE_AUTO: 'AUTO',
+    STATE_IDLE: 'OFF',
     climate.STATE_ECO: 'ECO',
-    climate.STATE_IDLE: 'OFF',
     climate.STATE_FAN_ONLY: 'OFF',
     climate.STATE_DRY: 'OFF',
 }
@@ -401,9 +406,10 @@ class _AlexaTemperatureSensor(_AlexaInterface):
 
         unit = self.entity.attributes[CONF_UNIT_OF_MEASUREMENT]
         temp = self.entity.state
+
         if self.entity.domain == climate.DOMAIN or \
                 self.entity.domain == sous_vide.DOMAIN:
-            temp = self.entity.attributes.get(climate.ATTR_CURRENT_TEMPERATURE)
+            temp = self.entity.attributes.get(ATTR_CURRENT_TEMPERATURE)
         return {
             'value': float(temp),
             'scale': API_TEMP_UNITS[unit],
@@ -432,19 +438,19 @@ class _AlexaThermostatController(_AlexaInterface):
 
     def get_property(self, name):
         if name == 'thermostatMode' and self.entity.domain == climate.DOMAIN:
-            ha_mode = self.entity.attributes.get(climate.ATTR_OPERATION_MODE)
+            ha_mode = self.entity.attributes.get(ATTR_OPERATION_MODE)
             mode = API_THERMOSTAT_MODES.get(ha_mode)
             if mode is None:
                 _LOGGER.error("%s (%s) has unsupported %s value '%s'",
                               self.entity.entity_id, type(self.entity),
-                              climate.ATTR_OPERATION_MODE, ha_mode)
+                              ATTR_OPERATION_MODE, ha_mode)
                 raise _UnsupportedProperty(name)
             return mode
 
         unit = self.entity.attributes[CONF_UNIT_OF_MEASUREMENT]
         temp = None
         if name == 'targetSetpoint':
-            temp = self.entity.attributes.get(climate.ATTR_TEMPERATURE)
+            temp = self.entity.attributes.get(ATTR_TEMPERATURE)
         elif name == 'lowerSetpoint' and self.entity.domain == climate.DOMAIN:
             temp = self.entity.attributes.get(climate.ATTR_TARGET_TEMP_LOW)
         elif name == 'upperSetpoint' and self.entity.domain == climate.DOMAIN:
@@ -1453,7 +1459,7 @@ async def async_api_set_target_temp(hass, config, request, entity):
         data[climate.ATTR_TARGET_TEMP_HIGH] = temp_high
 
     await hass.services.async_call(
-        entity.domain, climate.SERVICE_SET_TEMPERATURE, data, blocking=False)
+        entity.domain, SERVICE_SET_TEMPERATURE, data, blocking=False)
 
     return api_message(request)
 
@@ -1480,7 +1486,7 @@ async def async_api_adjust_target_temp(hass, config, request, entity):
     }
 
     await hass.services.async_call(
-        entity.domain, climate.SERVICE_SET_TEMPERATURE, data, blocking=False)
+        entity.domain, SERVICE_SET_TEMPERATURE, data, blocking=False)
 
     return api_message(request)
 
@@ -1508,7 +1514,7 @@ async def async_api_set_thermostat_mode(hass, config, request, entity):
 
     data = {
         ATTR_ENTITY_ID: entity.entity_id,
-        climate.ATTR_OPERATION_MODE: ha_mode,
+        ATTR_OPERATION_MODE: ha_mode,
     }
 
     await hass.services.async_call(

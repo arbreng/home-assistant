@@ -4,14 +4,13 @@ Support for MAX! Thermostats via MAX! Cube.
 For more details about this platform, please refer to the documentation
 https://home-assistant.io/components/maxcube/
 """
-import socket
 import logging
+import socket
 
 from homeassistant.components.climate import (
-    ClimateDevice, STATE_AUTO, SUPPORT_TARGET_TEMPERATURE,
-    SUPPORT_OPERATION_MODE)
+    SUPPORT_OPERATION_MODE, SUPPORT_TARGET_TEMPERATURE, ClimateDevice)
 from homeassistant.components.maxcube import DATA_KEY
-from homeassistant.const import TEMP_CELSIUS, ATTR_TEMPERATURE
+from homeassistant.const import ATTR_TEMPERATURE, STATE_AUTO, TEMP_CELSIUS
 
 _LOGGER = logging.getLogger(__name__)
 

@@ -6,14 +6,18 @@ https://home-assistant.io/components/climate.zwave/
 """
 # Because we do not compile openzwave on CI
 import logging
+
 from homeassistant.components.climate import (
-    DOMAIN, ClimateDevice, STATE_AUTO, STATE_COOL, STATE_HEAT,
-    SUPPORT_TARGET_TEMPERATURE, SUPPORT_FAN_MODE,
-    SUPPORT_OPERATION_MODE, SUPPORT_SWING_MODE)
+    DOMAIN, SUPPORT_FAN_MODE, SUPPORT_OPERATION_MODE, SUPPORT_SWING_MODE,
+    SUPPORT_TARGET_TEMPERATURE, ClimateDevice)
+from homeassistant.components.zwave import (  # pylint: disable=unused-import;  # noqa:F401
+    async_setup_platform)
+
 from homeassistant.components.zwave import ZWaveDeviceEntity
-from homeassistant.components.zwave import async_setup_platform  # noqa pylint: disable=unused-import
+from homeassistant.components.zwave import async_setup_platform  # pylint: disable=unused-import; # noqa
 from homeassistant.const import (
-    STATE_OFF, TEMP_CELSIUS, TEMP_FAHRENHEIT, ATTR_TEMPERATURE)
+    ATTR_TEMPERATURE, STATE_AUTO, STATE_COOL, STATE_HEAT, STATE_OFF,
+    TEMP_CELSIUS, TEMP_FAHRENHEIT)
 
 _LOGGER = logging.getLogger(__name__)
 

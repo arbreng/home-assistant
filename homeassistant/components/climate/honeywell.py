@@ -4,21 +4,21 @@ Support for Honeywell Round Connected and Honeywell Evohome thermostats.
 For more details about this platform, please refer to the documentation at
 https://home-assistant.io/components/climate.honeywell/
 """
+import datetime
 import logging
 import socket
-import datetime
 
 import requests
 import voluptuous as vol
 
 import homeassistant.helpers.config_validation as cv
 from homeassistant.components.climate import (
-    ClimateDevice, PLATFORM_SCHEMA, ATTR_FAN_MODE, ATTR_FAN_LIST,
-    ATTR_OPERATION_MODE, ATTR_OPERATION_LIST, SUPPORT_TARGET_TEMPERATURE,
-    SUPPORT_AWAY_MODE, SUPPORT_OPERATION_MODE)
+    ATTR_FAN_LIST, ATTR_FAN_MODE, ATTR_OPERATION_LIST, PLATFORM_SCHEMA,
+    SUPPORT_AWAY_MODE, SUPPORT_OPERATION_MODE, SUPPORT_TARGET_TEMPERATURE,
+    ClimateDevice)
 from homeassistant.const import (
-    CONF_PASSWORD, CONF_USERNAME, TEMP_CELSIUS, TEMP_FAHRENHEIT,
-    ATTR_TEMPERATURE, CONF_REGION)
+    ATTR_OPERATION_MODE, ATTR_TEMPERATURE, CONF_PASSWORD, CONF_REGION,
+    CONF_USERNAME, TEMP_CELSIUS, TEMP_FAHRENHEIT)
 
 REQUIREMENTS = ['evohomeclient==0.2.5', 'somecomfort==0.5.2']
 
